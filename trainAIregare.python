@@ -46,7 +46,7 @@ class blePump:
         return
 
 def writeLog(t):
-	#cnx = MySQLdb.connect(host='mikmak.cc', user='mikmak', passwd='Gaffe2014', db='wateringStation')
+	#cnx = MySQLdb.connect(host='mikmak.cc', user='', passwd='', db='')
 	#cursor = cnx.cursor()
 	#proc = "recordWatering"
 	#args = (t, 0)
