@@ -28,17 +28,22 @@ class LoPoSwitch:
 	return
 
     def turnOn(self):
+    	self.con.sendline('connect') # Reconnect if not connected
+    	
         cmd = 'char-write-cmd 0x000b 5231' #Write 'R1' to second attribute
         print cmd
         self.con.sendline( cmd )
-        #self.con.expect('\[CON\].*>')
+        print(child.before)
         self.cb = {}
         return
 
     def turnOff(self):
+    	self.con.sendline('connect') # Reconnect if not connected
+    	
         cmd = 'char-write-cmd 0x000b 5230' #Write 'R0' to second attribute
         print cmd
         self.con.sendline( cmd )
+        print(child.before)
         return
 
 def writeLog(t):
@@ -50,7 +55,7 @@ def writeLog(t):
 
 
 bluetooth_adr = "CB:FE:19:98:A0:EF"
-Pump = blePump(bluetooth_adr)
+Pump = LoPoSwitch(bluetooth_adr)
 while True:
     var = input("Start Watering? \nType <<1>> to start or <<10>> to exit: ")
 
