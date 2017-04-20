@@ -27,7 +27,7 @@ class LoPoSwitch:
 		self.cb = {}
 	return
 
-    def turnOn(self):
+	def turnOn(self):
     	self.con.sendline('connect') # Reconnect if not connected
     	
         cmd = 'char-write-cmd 0x000b 5231' #Write 'R1' to second attribute
@@ -35,7 +35,7 @@ class LoPoSwitch:
         self.con.sendline( cmd )
         print(child.before)
         self.cb = {}
-        return
+		return
 
     def turnOff(self):
     	self.con.sendline('connect') # Reconnect if not connected
