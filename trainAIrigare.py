@@ -13,18 +13,18 @@ def floatfromhex(h):
 
 class LoPoSwitch:
 
-    def __init__( self, bluetooth_adr ):
-        self.con = pexpect.spawn('gatttool -b ' + bluetooth_adr + ' --interactive -t random --listen')
-        self.con.expect('\[LE\]>', timeout=100)
-        print "Preparing to connect."
-        self.con.sendline('connect')
-        # test for success of connect
+	def __init__( self, bluetooth_adr ):
+		self.con = pexpect.spawn('gatttool -b ' + bluetooth_adr + ' --interactive -t random --listen')
+		self.con.expect('\[LE\]>', timeout=100)
+		print "Preparing to connect."
+		self.con.sendline('connect')
+		# test for success of connect
 		self.con.expect('Connection successful.*\[LE\]>')
-        # Earlier versions of gatttool returned a different message.  Use this pattern -
-        #self.con.expect('\[CON\].*>')
-        self.cb = {}
+		# Earlier versions of gatttool returned a different message.  Use this pattern -
+		#self.con.expect('\[CON\].*>')
+		self.cb = {}
 		self.con.sendline('char-write-req 0x000e 0100')
-        self.cb = {}
+		self.cb = {}
 	return
 
     def turnOn(self):
