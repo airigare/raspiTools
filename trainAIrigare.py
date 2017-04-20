@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 
-import pexpect
-import sys
+import pexpect, sys, json, select, MySQLdb
 from time import time
 #from sensor_calcs import *
-import json
-import select
-import MySQLdb
-
+# LoPoSwitch
 def floatfromhex(h):
     t = float.fromhex(h)
     if t > float.fromhex('7FFF'):
@@ -15,7 +11,7 @@ def floatfromhex(h):
         pass
     return t
 
-class blePump:
+class LoPoSwitch:
 
     def __init__( self, bluetooth_adr ):
         self.con = pexpect.spawn('gatttool -b ' + bluetooth_adr + ' --interactive -t random --listen')
@@ -23,16 +19,16 @@ class blePump:
         print "Preparing to connect."
         self.con.sendline('connect')
         # test for success of connect
-	self.con.expect('Connection successful.*\[LE\]>')
+		self.con.expect('Connection successful.*\[LE\]>')
         # Earlier versions of gatttool returned a different message.  Use this pattern -
         #self.con.expect('\[CON\].*>')
         self.cb = {}
-	self.con.sendline('char-write-req 0x000e 0100')
+		self.con.sendline('char-write-req 0x000e 0100')
         self.cb = {}
 	return
 
     def turnOn(self):
-        cmd = 'char-write-cmd 0x000b 5231'
+        cmd = 'char-write-cmd 0x000b 5231' #Write 'R1' to second attribute
         print cmd
         self.con.sendline( cmd )
         #self.con.expect('\[CON\].*>')
@@ -40,23 +36,16 @@ class blePump:
         return
 
     def turnOff(self):
-        cmd = 'char-write-cmd 0x000b 5230'
+        cmd = 'char-write-cmd 0x000b 5230' #Write 'R0' to second attribute
         print cmd
         self.con.sendline( cmd )
         return
 
 def writeLog(t):
-	#cnx = MySQLdb.connect(host='mikmak.cc', user='', passwd='', db='')
-	#cursor = cnx.cursor()
-	#proc = "recordWatering"
-	#args = (t, 0)
-	#cursor.callproc(proc,args)
-	#cnx.commit()
-	#cursor.close()
-	#cnx.close()
 
 	print("Data logged successefully")
 	return -1
+
 
 
 
