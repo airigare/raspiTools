@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import pexpect, sys, json, select
-from time import time
+import pexpect, sys, json, select, time
+
 #from sensor_calcs import *
 # LoPoSwitch
 
@@ -25,7 +25,7 @@ class LoPoSwitch:
 
 	def __init__( self, bluetooth_adr ):
 		self.con = pexpect.spawn('gatttool -b ' + bluetooth_adr + ' --interactive -t random --listen')
-		self.con.logfile = open(self.file, "a") #Dissable for Python3
+		#self.con.logfile = open(self.file, "a") #Dissable for Python3
 		self.con.expect('\[LE\]>', timeout=100)
 		#print "Preparing to connect."
 		self.con.sendline('connect')
@@ -46,7 +46,11 @@ class LoPoSwitch:
 		cmd = 'char-write-cmd 0x000b 5231' #Write 'R1' to second attribute
 		#print cmd
 		self.con.sendline( cmd )
-		self.con.expect("\[LE\].*>")
+		index = self.con.expect(['Notification handle = 0x000d value: ', 'Command Failed: Disconnected'])
+		if index == 0:
+			print("OK")
+		elif index == 1:
+			print("Disconnected")
 		return
 
 	def turnOff(self):
@@ -57,7 +61,11 @@ class LoPoSwitch:
 		cmd = 'char-write-cmd 0x000b 5230' #Write 'R0' to second attribute
 		#print cmd
 		self.con.sendline( cmd )
-		self.con.expect("\[LE\].*>")
+		index = self.con.expect(['Notification handle = 0x000d value: ', 'Command Failed: Disconnected'])
+                if index == 0:
+                        print("OK")
+                elif index == 1:
+                        print("Disconnected")
 		return
 
 	def off(self):
@@ -86,13 +94,13 @@ while True:
 		continue
 	
 	Pump.turnOn()
-	sT = time()
+	sT = time.time()
 
 	while var == 1:
  		var = input("Stop Watering? \n Type <<0>> to stop: ")
 
 	Pump.turnOff()
-	wT = time() - sT
+	wT = time.time() - sT
 	print("I was watering " + str(round(wT,0)) + " seconds")
 	#Pump.writeLog(wT)
 
